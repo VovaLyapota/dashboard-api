@@ -12,4 +12,14 @@ export class UsersService {
 
     return this.usersRepo.save(user);
   }
+
+  findOne(id: number) {
+    if (!id) return null;
+
+    return this.usersRepo.findBy({ id });
+  }
+
+  find(email: string) {
+    return this.usersRepo.find({ where: { email } });
+  }
 }
