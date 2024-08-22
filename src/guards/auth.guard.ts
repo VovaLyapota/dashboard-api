@@ -6,10 +6,10 @@ export class AuthGuard implements CanActivate {
   constructor(private usersService: UsersService) {}
 
   async canActivate(context: ExecutionContext) {
-    const request = context.switchToHttp().getRequest();
-    if (!request.currentUser?.id) return false;
+    const { currentUser } = context.switchToHttp().getRequest() || {};
+    if (!currentUser?.id) return false;
 
-    const user = await this.usersService.findOne(request.currentUser?.id);
-    return !!(user && user.token);
+    const user = await this.usersService.findOne(currentUser?.id);
+    return !!(user && user.token && user.token === currentUser.token);
   }
 }
