@@ -16,7 +16,7 @@ export class UsersService {
   findOne(id: number) {
     if (!id) return null;
 
-    return this.usersRepo.findBy({ id });
+    return this.usersRepo.findOneBy({ id });
   }
 
   find(email: string) {
@@ -24,10 +24,8 @@ export class UsersService {
   }
 
   async update(id: number, attrs: Partial<User>) {
-    const [user] = await this.findOne(id);
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
+    const user = await this.findOne(id);
+    if (!user) throw new NotFoundException('User not found');
 
     Object.assign(user, attrs);
     return this.usersRepo.save(user);
