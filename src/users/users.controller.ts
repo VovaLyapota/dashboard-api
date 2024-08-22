@@ -1,15 +1,13 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { UsersService } from './users.service';
+import { AuthService } from './auth.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 
 @Controller('users')
 export class UsersController {
-  constructor(private usersService: UsersService) {}
+  constructor(private authService: AuthService) {}
 
   @Post('signup')
   async createUser(@Body() body: CreateUserDto) {
-    const user = await this.usersService.create(body.email, body.password);
-
-    return user;
+    return await this.authService.signup(body.email, body.password);
   }
 }
