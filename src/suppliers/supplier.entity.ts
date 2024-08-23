@@ -1,4 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  AfterInsert,
+  AfterRemove,
+  AfterUpdate,
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 export enum Status {
   ACTIVE = 'ACTIVE',
@@ -33,4 +40,14 @@ export class Supplier {
     default: Status.INACTIVE,
   })
   status: Status;
+
+  @AfterInsert()
+  logInsert() {
+    console.log('Inserted new supplier with id', this.id);
+  }
+
+  @AfterUpdate()
+  logUpdate() {
+    console.log('Supplier with id ', this.id, ' was updated');
+  }
 }

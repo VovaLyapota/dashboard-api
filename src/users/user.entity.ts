@@ -30,9 +30,4 @@ export class User {
   logUpdate() {
     console.log('User with id ', this.id, ' was updated');
   }
-
-  @AfterRemove()
-  logRemove() {
-    console.log('User with id ', this.id, ' was removed');
-  }
 }
