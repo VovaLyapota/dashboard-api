@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Supplier } from './supplier.entity';
 import { Repository } from 'typeorm';
@@ -25,8 +25,9 @@ export class SuppliersService {
 
   async update(id: number, updateValues: Partial<Supplier>) {
     const supplier = await this.findOne(id);
-    Object.assign(supplier, updateValues);
+    if (!supplier) throw new NotFoundException('There is no such a supplier');
 
+    Object.assign(supplier, updateValues);
     return await this.suppliersRepo.save(supplier);
   }
 }

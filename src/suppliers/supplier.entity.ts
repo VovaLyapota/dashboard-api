@@ -1,13 +1,12 @@
 import {
   AfterInsert,
-  AfterRemove,
   AfterUpdate,
   Column,
   Entity,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-export enum Status {
+export enum StatusEnum {
   ACTIVE = 'ACTIVE',
   INACTIVE = 'INACTIVE',
 }
@@ -34,12 +33,14 @@ export class Supplier {
   })
   amount: number;
 
-  @Column({
-    type: 'enum',
-    enum: Status,
-    default: Status.INACTIVE,
-  })
-  status: Status;
+  // @Column({
+  //   type: 'enum',
+  //   enum: StatusEnum,
+  //   default: StatusEnum.INACTIVE,
+  // })
+  // status: StatusEnum;
+  @Column({ default: 'INACTIVE' })
+  status: 'ACTIVE' | 'INACTIVE';
 
   @AfterInsert()
   logInsert() {
