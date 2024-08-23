@@ -18,6 +18,9 @@ export class User {
   @Column()
   password: string;
 
+  @Column({ default: null })
+  token: string | null;
+
   @AfterInsert()
   logInsert() {
     console.log('Inserted User with id', this.id);
