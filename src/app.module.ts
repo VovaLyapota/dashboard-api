@@ -6,6 +6,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 // import { TypeOrmConfigService } from './config/typeorm.config';
 import { UsersModule } from './users/users.module';
 import { User } from './users/user.entity';
+import { SuppliersModule } from './suppliers/suppliers.module';
+import { Supplier } from './suppliers/supplier.entity';
 
 @Module({
   imports: [
@@ -17,10 +19,11 @@ import { User } from './users/user.entity';
     TypeOrmModule.forRoot({
       type: 'sqlite',
       database: 'db.sqlite',
-      entities: [User],
+      entities: [User, Supplier],
       synchronize: true,
     }),
     UsersModule,
+    SuppliersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

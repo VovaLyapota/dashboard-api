@@ -1,6 +1,5 @@
 import {
   AfterInsert,
-  AfterRemove,
   AfterUpdate,
   Column,
   Entity,
@@ -29,10 +28,5 @@ export class User {
   @AfterUpdate()
   logUpdate() {
     console.log('User with id ', this.id, ' was updated');
-  }
-
-  @AfterRemove()
-  logRemove() {
-    console.log('User with id ', this.id, ' was removed');
   }
 }
