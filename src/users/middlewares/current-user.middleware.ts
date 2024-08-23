@@ -32,7 +32,7 @@ export class CurrentUserMiddleware implements NestMiddleware {
         secret: this.configService.get('JWT_SECRET'),
       });
 
-      req.currentUser = payload;
+      req.currentUser = { ...payload, token };
 
       next();
     } catch {
