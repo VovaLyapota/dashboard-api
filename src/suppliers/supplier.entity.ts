@@ -1,8 +1,10 @@
+import { Product } from 'src/products/product.entity';
 import {
   AfterInsert,
   AfterUpdate,
   Column,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -39,8 +41,11 @@ export class Supplier {
   //   default: StatusEnum.INACTIVE,
   // })
   // status: StatusEnum;
-  @Column({ default: 'INACTIVE' })
-  status: 'ACTIVE' | 'INACTIVE';
+  @Column({ default: StatusEnum.INACTIVE })
+  status: `${StatusEnum}`;
+
+  @ManyToOne(() => Product, (product) => product.suppliers)
+  product: Product;
 
   @AfterInsert()
   logInsert() {
