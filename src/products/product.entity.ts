@@ -23,8 +23,8 @@ export class Product {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  photo: string;
+  @Column({ default: null })
+  photo: string | null;
 
   @Column()
   name: string;
