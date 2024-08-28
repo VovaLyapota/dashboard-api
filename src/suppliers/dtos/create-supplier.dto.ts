@@ -6,9 +6,9 @@ import {
   Matches,
   Min,
 } from 'class-validator';
-import { StatusEnum } from '../supplier.entity';
+import { SupplierStatusEnum } from '../supplier.entity';
 
-const dateFormatRegex = /^\d{2}-\d{2}-\d{4}$/;
+export const dateFormatRegex = /^\d{2}-\d{2}-\d{4}$/;
 
 export class CreateSupplierDto {
   @IsString()
@@ -31,6 +31,6 @@ export class CreateSupplierDto {
   amount: number;
 
   @IsOptional()
-  @IsEnum(StatusEnum)
+  @IsEnum(SupplierStatusEnum)
   status: string;
 }

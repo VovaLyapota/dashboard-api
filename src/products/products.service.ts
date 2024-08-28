@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SuppliersService } from 'src/suppliers/suppliers.service';
 import { Repository } from 'typeorm';
@@ -71,7 +75,7 @@ export class ProductsService {
   async delete(id: number) {
     const product = await this.findOne(id);
     if (!product)
-      throw new NotFoundException('Product with such an id is not found');
+      throw new BadRequestException("Product with such an id doesn't exist");
 
     await this.productsRepo
       .createQueryBuilder()
