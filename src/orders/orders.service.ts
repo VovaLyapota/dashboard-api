@@ -31,7 +31,7 @@ export class OrdersService {
     if (quantity !== undefined)
       query.andWhere('order.amount <= :minAmount', { minAmount });
     if (quantity !== undefined)
-      query.andWhere('order.amount <= :maxAmount', { maxAmount });
+      query.andWhere('order.amount >= :maxAmount', { maxAmount });
     if (quantity !== undefined)
       query.andWhere('order.status = :status', { status });
 
