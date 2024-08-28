@@ -18,7 +18,7 @@ export class CreateSupplierDto {
   address: string;
 
   @IsString()
-  suppliers: string;
+  company: string;
 
   @IsString()
   @Matches(dateFormatRegex, {

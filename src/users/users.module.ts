@@ -6,10 +6,18 @@ import { User } from './user.entity';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { ConfigService } from '@nestjs/config';
-import { CurrentUserMiddleware } from './middlewares/current-user.middleware';
+import { AuthGuard } from 'src/guards/auth.guard';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
-  providers: [UsersService, AuthService],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+    UsersService,
+    AuthService,
+  ],
   imports: [
     TypeOrmModule.forFeature([User]),
     JwtModule.registerAsync({
@@ -23,8 +31,4 @@ import { CurrentUserMiddleware } from './middlewares/current-user.middleware';
   ],
   controllers: [UsersController],
 })
-export class UsersModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(CurrentUserMiddleware).forRoutes('*');
-  }
-}
+export class UsersModule {}
