@@ -12,12 +12,12 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { GetProductsDto } from './dtos/get-product.dto';
-import { ProductsService } from './products.service';
-import { CreateProductDto } from './dtos/create-product.dto';
-import { UpdateProductDto } from './dtos/update-product.dto';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
+import { CreateProductDto } from './dtos/create-product.dto';
+import { GetProductsDto } from './dtos/get-product.dto';
 import { ProductDto } from './dtos/product.dto';
+import { UpdateProductDto } from './dtos/update-product.dto';
+import { ProductsService } from './products.service';
 
 @Controller('products')
 @Serialize(ProductDto)

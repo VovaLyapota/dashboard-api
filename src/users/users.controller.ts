@@ -5,9 +5,8 @@ import {
   HttpCode,
   HttpStatus,
   Post,
-  UseGuards,
 } from '@nestjs/common';
-import { AuthGuard } from 'src/guards/auth.guard';
+import { Public } from 'src/decorators/public-route.decorator';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { AuthService } from './auth.service';
 import { CurrentUser } from './decorators/current-user.decorator';
@@ -20,24 +19,24 @@ import { User } from './user.entity';
 export class UsersController {
   constructor(private authService: AuthService) {}
 
+  @Public()
   @Post('signup')
   createUser(@Body() body: CreateUserDto) {
     return this.authService.signup(body.email, body.password);
   }
 
+  @Public()
   @Get('signin')
   login(@Body() body: CreateUserDto) {
     return this.authService.signin(body.email, body.password);
   }
 
-  @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('signout')
   async logout(@CurrentUser() user: User) {
     await this.authService.signout(user.email);
   }
 
-  @UseGuards(AuthGuard)
   @Get('whoami')
   async getCurrentUser(@CurrentUser() user: User) {
     return user;
