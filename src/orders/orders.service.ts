@@ -4,10 +4,11 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Order } from './order.entity';
 import { Repository } from 'typeorm';
 import { CreateOrderDto } from './dtos/create-order.dto';
+import { GetOrdersDto } from './dtos/get-orders.dto';
 import { UpdateOrderDto } from './dtos/update-order.dto';
+import { Order } from './order.entity';
 
 @Injectable()
 export class OrdersService {
@@ -19,8 +20,22 @@ export class OrdersService {
     return await this.ordersRepository.findOneBy({ id });
   }
 
-  async findAll() {
-    return await this.ordersRepository.find();
+  async findAll(getOrdersDto: GetOrdersDto) {
+    const { customer, quantity, minAmount, maxAmount, status } = getOrdersDto;
+    const query = this.ordersRepository.createQueryBuilder('order');
+
+    if (customer !== undefined)
+      query.where('order.customerName LIKE :customer', { customer });
+    if (quantity !== undefined)
+      query.andWhere('order.quantity = :quantity', { quantity });
+    if (quantity !== undefined)
+      query.andWhere('order.amount <= :minAmount', { minAmount });
+    if (quantity !== undefined)
+      query.andWhere('order.amount <= :maxAmount', { maxAmount });
+    if (quantity !== undefined)
+      query.andWhere('order.status = :status', { status });
+
+    return await query.getMany();
   }
 
   async create(createOrderDto: CreateOrderDto) {
