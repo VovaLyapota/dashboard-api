@@ -25,7 +25,7 @@ export class ProductDto {
     obj.suppliers.map((supplier: Supplier) => ({
       id: supplier.id,
       name: supplier.name,
-      company: supplier.suppliers,
+      company: supplier.company,
     })),
   )
   @Expose()
