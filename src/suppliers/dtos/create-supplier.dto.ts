@@ -27,7 +27,7 @@ export class CreateSupplierDto {
   date: string;
 
   @IsNumber()
-  @Min(1)
+  @Min(0)
   amount: number;
 
   @IsOptional()
