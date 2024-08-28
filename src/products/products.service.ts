@@ -24,7 +24,7 @@ export class ProductsService {
   }
 
   async findAll(getProductsDto: GetProductsDto) {
-    const { stock, minPrice, maxPrice, category, supplier } = getProductsDto;
+    const { stock, minPrice, maxPrice, category } = getProductsDto;
     const query = this.productsRepo
       .createQueryBuilder('product')
       .leftJoinAndSelect('product.suppliers', 'supplier');

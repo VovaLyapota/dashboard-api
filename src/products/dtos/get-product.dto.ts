@@ -1,6 +1,6 @@
-import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
-import { CategoryEnum } from '../product.entity';
 import { Transform } from 'class-transformer';
+import { IsEnum, IsNumber, IsOptional } from 'class-validator';
+import { CategoryEnum } from '../product.entity';
 
 export class GetProductsDto {
   @IsOptional()
@@ -21,8 +21,4 @@ export class GetProductsDto {
   @IsOptional()
   @IsEnum(CategoryEnum)
   category: string;
-
-  @IsOptional()
-  @IsString()
-  supplier: string;
 }
