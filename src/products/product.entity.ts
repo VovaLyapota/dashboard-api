@@ -4,7 +4,8 @@ import {
   AfterUpdate,
   Column,
   Entity,
-  OneToMany,
+  JoinTable,
+  ManyToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -35,7 +36,7 @@ export class Product {
   @Column({
     type: 'float',
   })
-  price: string;
+  price: number;
 
   // @Column({
   //   type: 'enum',
@@ -48,11 +49,9 @@ export class Product {
   })
   category: `${CategoryEnum}`;
 
-  // One-to-many relation with supplier entity
-  @OneToMany(
-    () => Supplier,
-    (supplier) => ({ id: supplier.id, name: supplier.name }),
-  )
+  // Many-to-many relation with supplier entity
+  @ManyToMany(() => Supplier, (supplier) => supplier.product)
+  @JoinTable()
   suppliers: Supplier[];
 
   @AfterInsert()

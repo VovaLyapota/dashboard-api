@@ -4,7 +4,7 @@ import {
   AfterUpdate,
   Column,
   Entity,
-  ManyToOne,
+  ManyToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -44,8 +44,8 @@ export class Supplier {
   @Column({ default: StatusEnum.INACTIVE })
   status: `${StatusEnum}`;
 
-  @ManyToOne(() => Product, (product) => product.suppliers)
-  product: Product;
+  @ManyToMany(() => Product, (product) => product.suppliers)
+  product: Product[];
 
   @AfterInsert()
   logInsert() {
