@@ -10,10 +10,10 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { OrdersService } from './orders.service';
-import { GetOrdersDto } from './dtos/get-orders.dto';
 import { CreateOrderDto } from './dtos/create-order.dto';
+import { GetOrdersDto } from './dtos/get-orders.dto';
 import { UpdateOrderDto } from './dtos/update-order.dto';
+import { OrdersService } from './orders.service';
 
 @Controller('orders')
 export class OrdersController {

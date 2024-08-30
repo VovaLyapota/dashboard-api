@@ -28,6 +28,7 @@ export class ProductsService {
   }
 
   async findAll(getProductsDto: GetProductsDto) {
+    console.log(getProductsDto);
     const { stock, minPrice, maxPrice, category } = getProductsDto;
     const query = this.productsRepo
       .createQueryBuilder('product')

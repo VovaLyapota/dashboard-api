@@ -8,17 +8,17 @@ export class GetOrdersDto {
   customer: string;
 
   @IsOptional()
-  @Transform(({ value }) => +value)
+  @Transform(({ value }) => parseInt(value))
   @IsNumber()
   quantity: number;
 
+  @Transform(({ value }) => parseFloat(value))
   @IsOptional()
-  @Transform(({ value }) => +value)
   @IsNumber()
   minAmount: number;
 
   @IsOptional()
-  @Transform(({ value }) => +value)
+  @Transform(({ value }) => parseFloat(value))
   @IsNumber()
   maxAmount: number;
 

@@ -25,14 +25,16 @@ export class OrdersService {
     const query = this.ordersRepository.createQueryBuilder('order');
 
     if (customer !== undefined)
-      query.where('order.customerName LIKE :customer', { customer });
+      query.where('order.customerName LIKE :customer', {
+        customer: `%${customer}%`,
+      });
     if (quantity !== undefined)
       query.andWhere('order.quantity = :quantity', { quantity });
-    if (quantity !== undefined)
-      query.andWhere('order.amount <= :minAmount', { minAmount });
-    if (quantity !== undefined)
-      query.andWhere('order.amount >= :maxAmount', { maxAmount });
-    if (quantity !== undefined)
+    if (minAmount !== undefined)
+      query.andWhere('order.amount >= :minAmount', { minAmount });
+    if (maxAmount !== undefined)
+      query.andWhere('order.amount <= :maxAmount', { maxAmount });
+    if (status !== undefined)
       query.andWhere('order.status = :status', { status });
 
     return await query.getMany();
