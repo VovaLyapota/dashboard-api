@@ -27,7 +27,8 @@ export class ProductsController {
   @Get()
   async getProducts(@Query() query: GetProductsDto) {
     const products = await this.productsService.findAll(query);
-    if (!products) throw new NotFoundException('There are no any products.');
+    if (!products.length)
+      throw new NotFoundException('There are no any products.');
 
     return products;
   }
