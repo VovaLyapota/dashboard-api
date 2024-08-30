@@ -12,17 +12,15 @@ import { Order } from './order.entity';
 
 @Injectable()
 export class OrdersService {
-  constructor(
-    @InjectRepository(Order) private ordersRepository: Repository<Order>,
-  ) {}
+  constructor(@InjectRepository(Order) private ordersRepo: Repository<Order>) {}
 
   async findOne(id: number) {
-    return await this.ordersRepository.findOneBy({ id });
+    return await this.ordersRepo.findOneBy({ id });
   }
 
   async findAll(getOrdersDto: GetOrdersDto) {
     const { customer, quantity, minAmount, maxAmount, status } = getOrdersDto;
-    const query = this.ordersRepository.createQueryBuilder('order');
+    const query = this.ordersRepo.createQueryBuilder('order');
 
     if (customer !== undefined)
       query.where('order.customerName LIKE :customer', {
@@ -41,9 +39,9 @@ export class OrdersService {
   }
 
   async create(createOrderDto: CreateOrderDto) {
-    const order = this.ordersRepository.create(createOrderDto);
+    const order = this.ordersRepo.create(createOrderDto);
 
-    return await this.ordersRepository.save(order);
+    return await this.ordersRepo.save(order);
   }
 
   async update(id: number, updateValues: UpdateOrderDto) {
@@ -52,7 +50,7 @@ export class OrdersService {
       throw new NotFoundException('Order with such an id is not found.');
 
     Object.assign(order, updateValues);
-    return await this.ordersRepository.save(order);
+    return await this.ordersRepo.save(order);
   }
 
   async delete(id: number) {
@@ -60,6 +58,6 @@ export class OrdersService {
     if (!order)
       throw new BadRequestException("Order with such an id doesn't exist");
 
-    return await this.ordersRepository.remove(order);
+    return await this.ordersRepo.remove(order);
   }
 }
