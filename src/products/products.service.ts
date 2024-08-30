@@ -1,9 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SuppliersService } from 'src/suppliers/suppliers.service';
 import { Repository } from 'typeorm';
 import { CreateProductDto } from './dtos/create-product.dto';
-import { GetProductsDto } from './dtos/get-product.dto';
+import { GetProductsDto } from './dtos/get-products.dto';
 import { UpdateProductDto } from './dtos/update-product.dto';
 import { Product } from './product.entity';
 
@@ -24,6 +28,7 @@ export class ProductsService {
   }
 
   async findAll(getProductsDto: GetProductsDto) {
+    console.log(getProductsDto);
     const { stock, minPrice, maxPrice, category } = getProductsDto;
     const query = this.productsRepo
       .createQueryBuilder('product')
@@ -34,13 +39,10 @@ export class ProductsService {
         minStock: stock - 3,
         maxStock: stock + 3,
       });
-
     if (minPrice !== undefined)
       query.andWhere('product.price >= :minPrice', { minPrice });
-
     if (maxPrice !== undefined)
       query.andWhere('product.price <= :maxPrice', { maxPrice });
-
     if (category !== undefined)
       query.andWhere('product.category = :category', { category });
 
@@ -71,7 +73,7 @@ export class ProductsService {
   async delete(id: number) {
     const product = await this.findOne(id);
     if (!product)
-      throw new NotFoundException('Product with such an id is not found');
+      throw new BadRequestException("Product with such an id doesn't exist");
 
     await this.productsRepo
       .createQueryBuilder()

@@ -10,6 +10,8 @@ import { SuppliersModule } from './suppliers/suppliers.module';
 import { Supplier } from './suppliers/supplier.entity';
 import { ProductsModule } from './products/products.module';
 import { Product } from './products/product.entity';
+import { OrdersModule } from './orders/orders.module';
+import { Order } from './orders/order.entity';
 
 @Module({
   imports: [
@@ -21,12 +23,13 @@ import { Product } from './products/product.entity';
     TypeOrmModule.forRoot({
       type: 'sqlite',
       database: 'db.sqlite',
-      entities: [User, Supplier, Product],
+      entities: [User, Supplier, Product, Order],
       synchronize: true,
     }),
     UsersModule,
     SuppliersModule,
     ProductsModule,
+    OrdersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

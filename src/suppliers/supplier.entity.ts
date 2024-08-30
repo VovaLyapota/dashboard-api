@@ -8,9 +8,9 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-export enum StatusEnum {
-  ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
+export enum SupplierStatusEnum {
+  ACTIVE = 'Active',
+  INACTIVE = 'Inactive',
 }
 
 @Entity()
@@ -37,12 +37,12 @@ export class Supplier {
 
   // @Column({
   //   type: 'enum',
-  //   enum: StatusEnum,
-  //   default: StatusEnum.INACTIVE,
+  //   enum: SupplierStatusEnum,
+  //   default: SupplierStatusEnum.INACTIVE,
   // })
-  // status: StatusEnum;
-  @Column({ default: StatusEnum.INACTIVE })
-  status: `${StatusEnum}`;
+  // status: SupplierStatusEnum;
+  @Column({ default: SupplierStatusEnum.INACTIVE })
+  status: `${SupplierStatusEnum}`;
 
   @ManyToMany(() => Product, (product) => product.suppliers)
   product: Product[];

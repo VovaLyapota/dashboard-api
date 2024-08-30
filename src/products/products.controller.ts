@@ -14,7 +14,7 @@ import {
 } from '@nestjs/common';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { CreateProductDto } from './dtos/create-product.dto';
-import { GetProductsDto } from './dtos/get-product.dto';
+import { GetProductsDto } from './dtos/get-products.dto';
 import { ProductDto } from './dtos/product.dto';
 import { UpdateProductDto } from './dtos/update-product.dto';
 import { ProductsService } from './products.service';
@@ -27,7 +27,8 @@ export class ProductsController {
   @Get()
   async getProducts(@Query() query: GetProductsDto) {
     const products = await this.productsService.findAll(query);
-    if (!products) throw new NotFoundException('There are no any products.');
+    if (!products.length)
+      throw new NotFoundException('There are no any products.');
 
     return products;
   }
