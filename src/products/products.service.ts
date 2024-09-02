@@ -28,7 +28,6 @@ export class ProductsService {
   }
 
   async findAll(getProductsDto: GetProductsDto) {
-    console.log(getProductsDto);
     const { stock, minPrice, maxPrice, category } = getProductsDto;
     const query = this.productsRepo
       .createQueryBuilder('product')
@@ -47,6 +46,10 @@ export class ProductsService {
       query.andWhere('product.category = :category', { category });
 
     return await query.getMany();
+  }
+
+  async count() {
+    return await this.productsRepo.count();
   }
 
   async create(productDto: CreateProductDto) {

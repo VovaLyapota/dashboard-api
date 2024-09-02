@@ -25,6 +25,10 @@ export class SuppliersService {
     return products;
   }
 
+  async count() {
+    return await this.suppliersRepo.count();
+  }
+
   async create(supplierData: Supplier) {
     const supplier = this.suppliersRepo.create(supplierData);
 

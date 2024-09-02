@@ -14,6 +14,7 @@ import { OrdersModule } from './orders/orders.module';
 import { Order } from './orders/order.entity';
 import { CustomersModule } from './customers/customers.module';
 import { Customer } from './customers/customer.entity';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { Customer } from './customers/customer.entity';
     ProductsModule,
     OrdersModule,
     CustomersModule,
+    DashboardModule,
   ],
   controllers: [AppController],
   providers: [AppService],
