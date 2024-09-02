@@ -48,6 +48,10 @@ export class CustomersService {
     return await query.getMany();
   }
 
+  async count() {
+    return await this.customersRepo.count();
+  }
+
   async create(createCustomerDto: CreateCustomerDto) {
     const customer = this.customersRepo.create(createCustomerDto);
 
