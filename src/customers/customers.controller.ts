@@ -55,9 +55,9 @@ export class CustomersController {
 
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  deleteCustomer(@Param('id') id: string) {
+  async deleteCustomer(@Param('id') id: string) {
     if (!+id) throw new BadRequestException('Invalid id property');
 
-    return this.customersService.delete(+id);
+    await this.customersService.delete(+id);
   }
 }

@@ -58,9 +58,9 @@ export class ProductsController {
 
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  deleteProduct(@Param('id') id: string) {
+  async deleteProduct(@Param('id') id: string) {
     if (!+id) throw new BadRequestException('Invalid id property');
 
-    return this.productsService.delete(+id);
+    await this.productsService.delete(+id);
   }
 }

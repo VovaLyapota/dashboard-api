@@ -51,9 +51,9 @@ export class OrdersController {
   }
 
   @Delete('/:id')
-  deleteOrder(@Param() id: string) {
+  async deleteOrder(@Param() id: string) {
     if (!+id) throw new BadRequestException('Invalid id property');
 
-    return this.ordersService.delete(+id);
+    await this.ordersService.delete(+id);
   }
 }
