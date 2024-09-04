@@ -1,6 +1,4 @@
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { Module, ValidationPipe } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 // import { TypeOrmConfigService } from './config/typeorm.config';
@@ -15,6 +13,7 @@ import { Order } from './orders/order.entity';
 import { CustomersModule } from './customers/customers.module';
 import { Customer } from './customers/customer.entity';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { APP_PIPE } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -36,7 +35,13 @@ import { DashboardModule } from './dashboard/dashboard.module';
     CustomersModule,
     DashboardModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    {
+      provide: APP_PIPE,
+      useValue: new ValidationPipe({
+        whitelist: true,
+      }),
+    },
+  ],
 })
 export class AppModule {}
