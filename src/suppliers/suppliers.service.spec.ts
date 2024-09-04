@@ -16,15 +16,7 @@ class SuppliersRepoMock {
 describe('SuppliersService', () => {
   let service: SuppliersService;
   let suppliersRepoMock: SuppliersRepoMock;
-  let supplier: {
-    id: number;
-    name: string;
-    address: string;
-    company: string;
-    date: string;
-    amount: number;
-    status: string;
-  };
+  let supplier: Supplier;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -49,7 +41,7 @@ describe('SuppliersService', () => {
       date: '01-01-01',
       amount: 100,
       status: 'Inactive',
-    };
+    } as Supplier;
   });
 
   it('suppliers service should be defined', () => {
