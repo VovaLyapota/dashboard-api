@@ -28,13 +28,13 @@ export class SuppliersController {
 
   @Post()
   createSupplier(@Body() body: CreateSupplierDto) {
-    return this.suppliersService.create(body as Supplier);
+    return this.suppliersService.create(body);
   }
 
   @Patch('/:id')
   updateSupplier(@Param('id') id: string, @Body() body: UpdateSupplierDto) {
     if (!+id) throw new BadRequestException('Invalid id property');
 
-    return this.suppliersService.update(+id, body as Partial<Supplier>);
+    return this.suppliersService.update(+id, body);
   }
 }
