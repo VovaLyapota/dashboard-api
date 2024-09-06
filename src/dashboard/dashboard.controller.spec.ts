@@ -37,15 +37,18 @@ describe('DashboardController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('getDashboard - returns number of products, suppliers and customers', async () => {
-    productsServiceMock.count.mockResolvedValueOnce(4);
-    suppliersServiceMock.count.mockResolvedValueOnce(3);
-    customersServiceMock.count.mockResolvedValueOnce(7);
-    const dashboard = await controller.getDashboard();
+  describe('getDashboard', () => {
+    it('should return the number of products, suppliers, and customers', async () => {
+      productsServiceMock.count.mockResolvedValueOnce(4);
+      suppliersServiceMock.count.mockResolvedValueOnce(3);
+      customersServiceMock.count.mockResolvedValueOnce(7);
 
-    expect(dashboard).toEqual({ products: 4, suppliers: 3, customers: 7 });
-    expect(productsServiceMock.count).toHaveBeenCalled();
-    expect(suppliersServiceMock.count).toHaveBeenCalled();
-    expect(customersServiceMock.count).toHaveBeenCalled();
+      const dashboard = await controller.getDashboard();
+
+      expect(dashboard).toEqual({ products: 4, suppliers: 3, customers: 7 });
+      expect(productsServiceMock.count).toHaveBeenCalled();
+      expect(suppliersServiceMock.count).toHaveBeenCalled();
+      expect(customersServiceMock.count).toHaveBeenCalled();
+    });
   });
 });
