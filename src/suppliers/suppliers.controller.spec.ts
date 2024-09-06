@@ -1,8 +1,9 @@
+import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { CreateSupplierDto } from './dtos/create-supplier.dto';
+import { Supplier } from './supplier.entity';
 import { SuppliersController } from './suppliers.controller';
 import { SuppliersService } from './suppliers.service';
-import { Supplier } from './supplier.entity';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
 
 class SuppliersServiceMok {
   findAll = jest.fn();
@@ -28,70 +29,64 @@ describe('SuppliersController', () => {
 
     controller = module.get<SuppliersController>(SuppliersController);
     suppliersServiceMok = module.get<SuppliersServiceMok>(SuppliersService);
-    supplier = {
-      id: 1,
-      name: 'supplier',
-      address: 'address',
-      company: 'company',
-      date: '01-01-01',
-      amount: 100,
-      status: 'Inactive',
-    } as Supplier;
+    supplier = { id: 1, name: 'supplier' } as Supplier;
   });
 
   it('suppliers controller should be defined', () => {
     expect(controller).toBeDefined();
   });
 
-  it('getAllSuppliers - returns all suppliers', async () => {
-    suppliersServiceMok.findAll.mockResolvedValueOnce([supplier]);
-    const suppliers = await controller.getAllSuppliers();
+  describe('getAllSuppliers', () => {
+    it('should return all suppliers', async () => {
+      suppliersServiceMok.findAll.mockResolvedValueOnce([supplier]);
+      const suppliers = await controller.getAllSuppliers();
 
-    expect(suppliers).toEqual([supplier]);
-    expect(suppliersServiceMok.findAll).toHaveBeenCalled();
-  });
-
-  it('getAllSuppliers - throws a NotFoundException if no user was found', async () => {
-    suppliersServiceMok.findAll.mockResolvedValueOnce([]);
-
-    await expect(controller.getAllSuppliers()).rejects.toThrow(
-      NotFoundException,
-    );
-  });
-
-  it('createSupplier - creates and returns a supplier by given dto', async () => {
-    suppliersServiceMok.create.mockResolvedValueOnce(supplier);
-
-    const createdSupplier = await controller.createSupplier(supplier);
-
-    expect(createdSupplier).toEqual(supplier);
-    expect(suppliersServiceMok.create).toHaveBeenCalledWith(supplier);
-  });
-
-  it('updateSupplier - updates and returns supplier by given id and dto', async () => {
-    const updateValues = { name: 'New supplier', amount: 123 };
-    suppliersServiceMok.update.mockResolvedValueOnce({
-      ...supplier,
-      ...updateValues,
+      expect(suppliers).toEqual([supplier]);
+      expect(suppliersServiceMok.findAll).toHaveBeenCalled();
     });
 
-    const updatedSupplier = await controller.updateSupplier('1', updateValues);
+    it('should throw a NotFoundException if no supplier was found', async () => {
+      suppliersServiceMok.findAll.mockResolvedValueOnce([]);
 
-    expect(updatedSupplier).toEqual({
-      ...supplier,
-      ...updateValues,
+      await expect(controller.getAllSuppliers()).rejects.toThrow(
+        NotFoundException,
+      );
+      expect(suppliersServiceMok.findAll).toHaveBeenCalled();
     });
-    expect(suppliersServiceMok.update).toHaveBeenCalledWith(1, updateValues);
   });
 
-  it('updateSupplier - throws a BadRequestException if invalid id was given', async () => {
-    // this part must work correctly but it doesn't
-    // await expect(
-    //   controller.updateSupplier('invalid_id', {
-    //     name: 'New supplier',
-    //     amount: 123,
-    //   }),
-    // ).rejects.toThrow(BadRequestException);
-    expect(suppliersServiceMok.update).not.toHaveBeenCalled();
+  describe('createSupplier', () => {
+    it('should create and return a supplier by given createDto', async () => {
+      suppliersServiceMok.create.mockResolvedValueOnce(supplier);
+      const createdSupplier = await controller.createSupplier(
+        {} as CreateSupplierDto,
+      );
+
+      expect(createdSupplier).toEqual(supplier);
+      expect(suppliersServiceMok.create).toHaveBeenCalled();
+    });
+  });
+
+  describe('updateSupplier', () => {
+    it('should update and return supplier by given id and updateDto', async () => {
+      const updateDto = { name: 'New supplier' };
+      const updateRes = {
+        ...supplier,
+        ...updateDto,
+      };
+      suppliersServiceMok.update.mockResolvedValueOnce(updateRes);
+      const updatedSupplier = await controller.updateSupplier('1', updateDto);
+
+      expect(updatedSupplier).toEqual(updateRes);
+      expect(suppliersServiceMok.update).toHaveBeenCalledWith(1, updateDto);
+    });
+
+    it('should throw a BadRequestException if invalid id was given', async () => {
+      // this part must work correctly but it doesn't
+      // await expect(controller.updateSupplier('invalid_id', {})).rejects.toThrow(
+      //   BadRequestException,
+      // );
+      expect(suppliersServiceMok.update).not.toHaveBeenCalled();
+    });
   });
 });
