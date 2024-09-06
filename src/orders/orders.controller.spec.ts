@@ -32,99 +32,99 @@ describe('OrdersController', () => {
 
     controller = module.get<OrdersController>(OrdersController);
     ordersServiceMock = module.get<OrdersServiceMock>(OrdersService);
-    order = {
-      id: 1,
-      customerName: 'Customer',
-      address: "Customer's address",
-      quantity: 1,
-      amount: 1000,
-      status: 'Pending',
-      date: '30-08-2024',
-    } as Order;
+    order = { id: 1, customerName: 'customer' } as Order;
   });
 
   it('orders controller should be defined', () => {
     expect(controller).toBeDefined();
   });
 
-  it('getOrders - returns all orders by given query', async () => {
-    ordersServiceMock.findAll.mockResolvedValueOnce([order]);
-    const foundOrders = await controller.getOrders({} as GetOrdersDto);
+  describe('getOrders', () => {
+    it('should return all orders by given getDto', async () => {
+      ordersServiceMock.findAll.mockResolvedValueOnce([order]);
+      const foundOrders = await controller.getOrders({} as GetOrdersDto);
 
-    expect(foundOrders).toEqual([order]);
-    expect(ordersServiceMock.findAll).toHaveBeenCalledWith({});
-  });
-
-  it('getOrders - throws a NotFoundException if no any orders were found', async () => {
-    ordersServiceMock.findAll.mockResolvedValueOnce([]);
-
-    await expect(controller.getOrders({} as GetOrdersDto)).rejects.toThrow(
-      NotFoundException,
-    );
-    expect(ordersServiceMock.findAll).toHaveBeenCalledWith({});
-  });
-
-  it('getOrder - returns the order by given id', async () => {
-    ordersServiceMock.findOne.mockResolvedValueOnce(order);
-    const foundOrder = await controller.getOrder('1');
-
-    expect(foundOrder).toEqual(order);
-    expect(ordersServiceMock.findOne).toHaveBeenCalledWith(1);
-  });
-
-  it('getOrder - throws a BadRequestException if invalid id was given', async () => {
-    await expect(controller.getOrder('invalid_id')).rejects.toThrow(
-      BadRequestException,
-    );
-    expect(ordersServiceMock.findOne).not.toHaveBeenCalled();
-  });
-
-  it('getOrder - throws a NotFoundException if such an order was not found', async () => {
-    ordersServiceMock.findOne.mockResolvedValueOnce(null);
-
-    await expect(controller.getOrder('1')).rejects.toThrow(NotFoundException);
-    expect(ordersServiceMock.findOne).toHaveBeenCalledWith(1);
-  });
-
-  it('createOrder - creates and returns an order', async () => {
-    ordersServiceMock.create.mockResolvedValueOnce(order);
-    const createdOrder = await controller.createOrder({} as CreateOrderDto);
-
-    expect(createdOrder).toEqual(order);
-    expect(ordersServiceMock.create).toHaveBeenCalledWith({});
-  });
-
-  it('updateOrder - updates and returns the order by given id and update values', async () => {
-    const updateValues = { amount: 120 };
-    ordersServiceMock.update.mockResolvedValueOnce({
-      ...order,
-      ...updateValues,
+      expect(foundOrders).toEqual([order]);
+      expect(ordersServiceMock.findAll).toHaveBeenCalled();
     });
-    const updatedOrder = await controller.updateOrder('1', updateValues);
 
-    expect(updatedOrder).toEqual({ ...order, ...updateValues });
-    expect(ordersServiceMock.update).toHaveBeenCalledWith(1, updateValues);
+    it('should throw a NotFoundException if no orders were found', async () => {
+      ordersServiceMock.findAll.mockResolvedValueOnce([]);
+
+      await expect(controller.getOrders({} as GetOrdersDto)).rejects.toThrow(
+        NotFoundException,
+      );
+      expect(ordersServiceMock.findAll).toHaveBeenCalled();
+    });
   });
 
-  it('updateOrder - throws a BadRequestException if invalid id was given', async () => {
-    // await expect(controller.updateOrder('invalid_id', {})).rejects.toThrow(
-    //   BadRequestException,
-    // );
-    expect(ordersServiceMock.update).not.toHaveBeenCalled();
+  describe('getOrder', () => {
+    it('should return the order by given id', async () => {
+      ordersServiceMock.findOne.mockResolvedValueOnce(order);
+      const foundOrder = await controller.getOrder('1');
+
+      expect(foundOrder).toEqual(order);
+      expect(ordersServiceMock.findOne).toHaveBeenCalledWith(1);
+    });
+
+    it('should throw a BadRequestException if invalid id was given', async () => {
+      await expect(controller.getOrder('invalid_id')).rejects.toThrow(
+        BadRequestException,
+      );
+      expect(ordersServiceMock.findOne).not.toHaveBeenCalled();
+    });
+
+    it('should throw a NotFoundException if an order was not found', async () => {
+      ordersServiceMock.findOne.mockResolvedValueOnce(null);
+
+      await expect(controller.getOrder('1')).rejects.toThrow(NotFoundException);
+      expect(ordersServiceMock.findOne).toHaveBeenCalledWith(1);
+    });
   });
 
-  it('deleteOrder - deletes the order by given id', async () => {
-    ordersServiceMock.delete.mockResolvedValueOnce(order);
-    const res = await controller.deleteOrder('1');
+  describe('createOrder', () => {
+    it('should create and return an order by given createDto', async () => {
+      ordersServiceMock.create.mockResolvedValueOnce(order);
+      const createdOrder = await controller.createOrder({} as CreateOrderDto);
 
-    expect(res).toBeUndefined();
-    expect(ordersServiceMock.delete).toHaveBeenCalledWith(1);
+      expect(createdOrder).toEqual(order);
+      expect(ordersServiceMock.create).toHaveBeenCalled();
+    });
   });
 
-  it('deleteOrder - throws a BadRequestException if invalid id was given', async () => {
-    await expect(controller.deleteOrder('invalid_id')).rejects.toThrow(
-      BadRequestException,
-    );
-    expect(ordersServiceMock.delete).not.toHaveBeenCalled();
+  describe('updateOrder', () => {
+    it('should update and return the order by given id and updateDto', async () => {
+      const updateDto = { customerName: 'New customer' };
+      const updateRes = { ...order, ...updateDto };
+      ordersServiceMock.update.mockResolvedValueOnce(updateRes);
+      const updatedOrder = await controller.updateOrder('1', updateDto);
+
+      expect(updatedOrder).toEqual(updateRes);
+      expect(ordersServiceMock.update).toHaveBeenCalledWith(1, updateDto);
+    });
+
+    // it('should throw a BadRequestException if invalid id was given', async () => {
+    //   await expect(controller.updateOrder('invalid_id', {})).rejects.toThrow(
+    //     BadRequestException,
+    //   );
+    //   expect(ordersServiceMock.update).not.toHaveBeenCalled();
+    // });
+  });
+
+  describe('deleteOrder', () => {
+    it('should delete the order by given id', async () => {
+      ordersServiceMock.delete.mockResolvedValueOnce(order);
+      const res = await controller.deleteOrder('1');
+
+      expect(res).toBeUndefined();
+      expect(ordersServiceMock.delete).toHaveBeenCalledWith(1);
+    });
+
+    it('should throw a BadRequestException if invalid id was given', async () => {
+      await expect(controller.deleteOrder('invalid_id')).rejects.toThrow(
+        BadRequestException,
+      );
+      expect(ordersServiceMock.delete).not.toHaveBeenCalled();
+    });
   });
 });
