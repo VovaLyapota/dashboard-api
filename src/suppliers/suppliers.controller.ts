@@ -8,10 +8,9 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { SuppliersService } from './suppliers.service';
 import { CreateSupplierDto } from './dtos/create-supplier.dto';
-import { Supplier } from './supplier.entity';
 import { UpdateSupplierDto } from './dtos/update-supplier.dto';
+import { SuppliersService } from './suppliers.service';
 
 @Controller('suppliers')
 export class SuppliersController {
