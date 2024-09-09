@@ -43,7 +43,7 @@ describe('Auth System (e2e)', () => {
     await app.init();
   });
 
-  describe('signup (POST)', () => {
+  describe('createUser (/signup, POST)', () => {
     it('should return created user', async () => {
       const {
         body: { id, email: resEmail, token },
@@ -75,7 +75,7 @@ describe('Auth System (e2e)', () => {
     });
   });
 
-  describe('signin (GET)', () => {
+  describe('login (/signin, GET)', () => {
     it('should return already existing user', async () => {
       const {
         body: { id, email: resEmail, token },
@@ -111,7 +111,7 @@ describe('Auth System (e2e)', () => {
     });
   });
 
-  describe('signout (POST)', () => {
+  describe('logout (/signout, POST)', () => {
     it('should handle request and delete existing token in db', async () => {
       await request(app.getHttpServer())
         .post('/users/signout')
@@ -140,7 +140,7 @@ describe('Auth System (e2e)', () => {
     });
   });
 
-  describe('whoami (GET)', () => {
+  describe('getCurrentUser (/whoami, GET)', () => {
     it('should return current user', async () => {
       const { body: currentUser } = await request(app.getHttpServer())
         .get('/users/whoami')
