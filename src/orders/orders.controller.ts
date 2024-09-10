@@ -4,6 +4,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   NotFoundException,
   Param,
   Post,
@@ -51,7 +53,8 @@ export class OrdersController {
   }
 
   @Delete('/:id')
-  async deleteOrder(@Param() id: string) {
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteOrder(@Param('id') id: string) {
     if (!+id) throw new BadRequestException('Invalid id property');
 
     await this.ordersService.delete(+id);

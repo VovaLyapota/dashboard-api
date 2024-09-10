@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SuppliersService } from 'src/suppliers/suppliers.service';
 import { Repository } from 'typeorm';
@@ -55,7 +51,9 @@ export class ProductsService {
   async create(productDto: CreateProductDto) {
     const { suppliers: suppliersIds, ...rest } = productDto;
     const product = this.productsRepo.create(rest);
-    product.suppliers = await this.suppliersService.findAll(suppliersIds);
+
+    if (suppliersIds?.length)
+      product.suppliers = await this.suppliersService.findAll(suppliersIds);
 
     return await this.productsRepo.save(product);
   }
@@ -76,7 +74,7 @@ export class ProductsService {
   async delete(id: number) {
     const product = await this.findOne(id);
     if (!product)
-      throw new BadRequestException("Product with such an id doesn't exist");
+      throw new NotFoundException('Product with such an id not found');
 
     await this.productsRepo
       .createQueryBuilder()

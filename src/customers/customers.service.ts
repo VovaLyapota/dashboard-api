@@ -70,7 +70,7 @@ export class CustomersService {
   async delete(id: number) {
     const customer = await this.findOne(id);
     if (!customer)
-      throw new BadRequestException("Customer with such an id doesn't exist");
+      throw new NotFoundException('Customer with such an id was not found');
 
     return await this.customersRepo.remove(customer);
   }

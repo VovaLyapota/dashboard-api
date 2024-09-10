@@ -1,7 +1,7 @@
 import { Module, ValidationPipe } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-// import { TypeOrmConfigService } from './config/typeorm.config';
+import { TypeOrmConfigService } from './config/typeorm.config';
 import { UsersModule } from './users/users.module';
 import { User } from './users/user.entity';
 import { SuppliersModule } from './suppliers/suppliers.module';
@@ -22,11 +22,17 @@ import { APP_PIPE } from '@nestjs/core';
       envFilePath: `.env.${process.env.NODE_ENV}`,
     }),
     // TypeOrmModule.forRootAsync({ useClass: TypeOrmConfigService }),
-    TypeOrmModule.forRoot({
-      type: 'sqlite',
-      database: 'db.sqlite',
-      entities: [User, Supplier, Product, Order, Customer],
-      synchronize: true,
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) =>
+        config.get<string>('NODE_ENV') === 'production'
+          ? { useClass: TypeOrmConfigService }
+          : {
+              type: 'sqlite',
+              database: config.get<string>('DB_NAME'),
+              entities: [User, Supplier, Product, Order, Customer],
+              synchronize: true,
+            },
     }),
     UsersModule,
     SuppliersModule,
