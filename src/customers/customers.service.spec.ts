@@ -1,10 +1,10 @@
+import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { CustomersService } from './customers.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Customer } from './customer.entity';
-import { GetCustomersDto } from './dtos/get-customers.dto';
+import { CustomersService } from './customers.service';
 import { CreateCustomerDto } from './dtos/create-customer.dto';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { GetCustomersDto } from './dtos/get-customers.dto';
 
 class CustomersRepoMock {
   findOneBy = jest.fn();
@@ -125,7 +125,7 @@ describe('CustomersService', () => {
     it('should throw a BadRequestException if an invalid id was given', async () => {
       customersRepoMock.findOneBy.mockResolvedValueOnce(null);
 
-      await expect(service.delete(1)).rejects.toThrow(BadRequestException);
+      await expect(service.delete(1)).rejects.toThrow(NotFoundException);
       expect(customersRepoMock.remove).not.toHaveBeenCalled();
     });
   });
