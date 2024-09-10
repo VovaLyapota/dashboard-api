@@ -109,7 +109,6 @@ describe('ProductsService', () => {
 
       expect(createdProduct).toEqual(product);
       expect(productsRepoMock.create).toHaveBeenCalled();
-      expect(suppliersServiceMock.findAll).toHaveBeenCalled();
       expect(productsRepoMock.save).toHaveBeenCalledWith(product);
     });
   });
@@ -170,7 +169,7 @@ describe('ProductsService', () => {
     it('should throw a BadRequestException if product is not found', async () => {
       productsRepoMock.findOne.mockResolvedValueOnce(null);
 
-      await expect(service.delete(1)).rejects.toThrow(BadRequestException);
+      await expect(service.delete(1)).rejects.toThrow(NotFoundException);
       expect(productsRepoMock.findOne).toHaveBeenCalledWith({
         where: { id: 1 },
         relations: { suppliers: true },

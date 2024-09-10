@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateOrderDto } from './dtos/create-order.dto';
@@ -56,7 +52,7 @@ export class OrdersService {
   async delete(id: number) {
     const order = await this.findOne(id);
     if (!order)
-      throw new BadRequestException("Order with such an id doesn't exist");
+      throw new NotFoundException('Order with such an id was not found');
 
     return await this.ordersRepo.remove(order);
   }
