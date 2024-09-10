@@ -5,7 +5,7 @@ import { AuthGuard } from 'src/guards/auth.guard';
 import { SuppliersService } from 'src/suppliers/suppliers.service';
 import * as request from 'supertest';
 
-describe('Auth System (e2e)', () => {
+describe('Suppliers System (e2e)', () => {
   let app: INestApplication;
   let suppliersService: SuppliersService;
   let supplierDto = {
@@ -71,13 +71,14 @@ describe('Auth System (e2e)', () => {
 
   describe('updateSupplier (/:id, PATCH)', () => {
     it('should return updated supplier', async () => {
+      const updateDto = { amount: 123, status: 'Inactive' };
       const { body } = await request(app.getHttpServer())
         .patch('/suppliers/1')
-        .send({ amount: 123, status: 'Inactive' })
+        .send(updateDto)
         .expect(200);
 
-      expect(body.amount).not.toEqual(supplierDto.amount);
-      expect(body.status).not.toEqual(supplierDto.status);
+      expect(body.amount).toEqual(updateDto.amount);
+      expect(body.status).toEqual(updateDto.status);
     });
 
     it('should throw 400 Bad Request if invalid id was given', async () => {

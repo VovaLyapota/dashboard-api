@@ -21,12 +21,13 @@ export class ProductDto {
   @Expose()
   category: CategoryEnum;
 
-  @Transform(({ obj }) =>
-    obj.suppliers.map((supplier: Supplier) => ({
-      id: supplier.id,
-      name: supplier.name,
-      company: supplier.company,
-    })),
+  @Transform(
+    ({ obj: { suppliers } }) =>
+      suppliers?.map((supplier: Supplier) => ({
+        id: supplier.id,
+        name: supplier.name,
+        company: supplier.company,
+      })) || [],
   )
   @Expose()
   suppliers: {
