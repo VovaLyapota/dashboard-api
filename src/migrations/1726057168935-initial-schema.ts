@@ -1,44 +1,179 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+const {
+  MigrationInterface,
+  TableIndex,
+  QueryRunner,
+  Table,
+  TableForeignKey,
+} = require('typeorm');
 
-export class InitialSchema1726057168935 implements MigrationInterface {
-    name = 'InitialSchema1726057168935'
+module.exports = class InitialSchema1726057168935 {
+  name = 'InitialSchema1726057168935';
 
-    public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`CREATE TABLE "user" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar NOT NULL, "password" varchar NOT NULL, "token" varchar)`);
-        await queryRunner.query(`CREATE TABLE "product" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "photo" varchar, "name" varchar NOT NULL, "stock" integer NOT NULL, "price" float NOT NULL, "category" varchar NOT NULL DEFAULT ('Medicine'))`);
-        await queryRunner.query(`CREATE TABLE "supplier" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar NOT NULL, "address" varchar NOT NULL, "company" varchar NOT NULL, "date" varchar NOT NULL, "amount" float NOT NULL, "status" varchar NOT NULL DEFAULT ('Inactive'))`);
-        await queryRunner.query(`CREATE TABLE "customer" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "image" varchar, "name" varchar NOT NULL, "email" varchar NOT NULL, "spent" float NOT NULL, "phone" varchar NOT NULL, "address" varchar NOT NULL, "registeredAt" varchar NOT NULL)`);
-        await queryRunner.query(`CREATE TABLE "order" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "customerName" varchar NOT NULL, "address" varchar NOT NULL, "quantity" integer NOT NULL, "amount" float NOT NULL, "status" varchar NOT NULL DEFAULT ('Pending'), "date" varchar NOT NULL)`);
-        await queryRunner.query(`CREATE TABLE "product_suppliers_supplier" ("productId" integer NOT NULL, "supplierId" integer NOT NULL, PRIMARY KEY ("productId", "supplierId"))`);
-        await queryRunner.query(`CREATE INDEX "IDX_d13f061c3361c028fd062a96a9" ON "product_suppliers_supplier" ("productId") `);
-        await queryRunner.query(`CREATE INDEX "IDX_aa97955af2c87f6e87271eea64" ON "product_suppliers_supplier" ("supplierId") `);
-        await queryRunner.query(`DROP INDEX "IDX_d13f061c3361c028fd062a96a9"`);
-        await queryRunner.query(`DROP INDEX "IDX_aa97955af2c87f6e87271eea64"`);
-        await queryRunner.query(`CREATE TABLE "temporary_product_suppliers_supplier" ("productId" integer NOT NULL, "supplierId" integer NOT NULL, CONSTRAINT "FK_d13f061c3361c028fd062a96a98" FOREIGN KEY ("productId") REFERENCES "product" ("id") ON DELETE CASCADE ON UPDATE CASCADE, CONSTRAINT "FK_aa97955af2c87f6e87271eea64b" FOREIGN KEY ("supplierId") REFERENCES "supplier" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION, PRIMARY KEY ("productId", "supplierId"))`);
-        await queryRunner.query(`INSERT INTO "temporary_product_suppliers_supplier"("productId", "supplierId") SELECT "productId", "supplierId" FROM "product_suppliers_supplier"`);
-        await queryRunner.query(`DROP TABLE "product_suppliers_supplier"`);
-        await queryRunner.query(`ALTER TABLE "temporary_product_suppliers_supplier" RENAME TO "product_suppliers_supplier"`);
-        await queryRunner.query(`CREATE INDEX "IDX_d13f061c3361c028fd062a96a9" ON "product_suppliers_supplier" ("productId") `);
-        await queryRunner.query(`CREATE INDEX "IDX_aa97955af2c87f6e87271eea64" ON "product_suppliers_supplier" ("supplierId") `);
-    }
+  async up(queryRunner) {
+    await queryRunner.createTable(
+      new Table({
+        name: 'user',
+        columns: [
+          {
+            name: 'id',
+            type: 'integer',
+            isPrimary: true,
+            isGenerated: true,
+            generationStrategy: 'increment',
+          },
+          { name: 'email', type: 'varchar', isNullable: false },
+          { name: 'password', type: 'varchar', isNullable: false },
+          { name: 'token', type: 'varchar', isNullable: true },
+        ],
+      }),
+    );
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`DROP INDEX "IDX_aa97955af2c87f6e87271eea64"`);
-        await queryRunner.query(`DROP INDEX "IDX_d13f061c3361c028fd062a96a9"`);
-        await queryRunner.query(`ALTER TABLE "product_suppliers_supplier" RENAME TO "temporary_product_suppliers_supplier"`);
-        await queryRunner.query(`CREATE TABLE "product_suppliers_supplier" ("productId" integer NOT NULL, "supplierId" integer NOT NULL, PRIMARY KEY ("productId", "supplierId"))`);
-        await queryRunner.query(`INSERT INTO "product_suppliers_supplier"("productId", "supplierId") SELECT "productId", "supplierId" FROM "temporary_product_suppliers_supplier"`);
-        await queryRunner.query(`DROP TABLE "temporary_product_suppliers_supplier"`);
-        await queryRunner.query(`CREATE INDEX "IDX_aa97955af2c87f6e87271eea64" ON "product_suppliers_supplier" ("supplierId") `);
-        await queryRunner.query(`CREATE INDEX "IDX_d13f061c3361c028fd062a96a9" ON "product_suppliers_supplier" ("productId") `);
-        await queryRunner.query(`DROP INDEX "IDX_aa97955af2c87f6e87271eea64"`);
-        await queryRunner.query(`DROP INDEX "IDX_d13f061c3361c028fd062a96a9"`);
-        await queryRunner.query(`DROP TABLE "product_suppliers_supplier"`);
-        await queryRunner.query(`DROP TABLE "order"`);
-        await queryRunner.query(`DROP TABLE "customer"`);
-        await queryRunner.query(`DROP TABLE "supplier"`);
-        await queryRunner.query(`DROP TABLE "product"`);
-        await queryRunner.query(`DROP TABLE "user"`);
-    }
+    await queryRunner.createTable(
+      new Table({
+        name: 'product',
+        columns: [
+          {
+            name: 'id',
+            type: 'integer',
+            isPrimary: true,
+            isGenerated: true,
+            generationStrategy: 'increment',
+          },
+          { name: 'photo', type: 'varchar', isNullable: true },
+          { name: 'name', type: 'varchar', isNullable: false },
+          { name: 'stock', type: 'integer', isNullable: false },
+          { name: 'price', type: 'float', isNullable: false },
+          {
+            name: 'category',
+            type: 'varchar',
+            default: `'Medicine'`,
+            isNullable: false,
+          },
+        ],
+      }),
+    );
 
-}
+    await queryRunner.createTable(
+      new Table({
+        name: 'supplier',
+        columns: [
+          {
+            name: 'id',
+            type: 'integer',
+            isPrimary: true,
+            isGenerated: true,
+            generationStrategy: 'increment',
+          },
+          { name: 'name', type: 'varchar', isNullable: false },
+          { name: 'address', type: 'varchar', isNullable: false },
+          { name: 'company', type: 'varchar', isNullable: false },
+          { name: 'date', type: 'varchar', isNullable: false },
+          { name: 'amount', type: 'float', isNullable: false },
+          {
+            name: 'status',
+            type: 'varchar',
+            default: `'Inactive'`,
+            isNullable: false,
+          },
+        ],
+      }),
+    );
+
+    await queryRunner.createTable(
+      new Table({
+        name: 'customer',
+        columns: [
+          {
+            name: 'id',
+            type: 'integer',
+            isPrimary: true,
+            isGenerated: true,
+            generationStrategy: 'increment',
+          },
+          { name: 'image', type: 'varchar', isNullable: true },
+          { name: 'name', type: 'varchar', isNullable: false },
+          { name: 'email', type: 'varchar', isNullable: false },
+          { name: 'spent', type: 'float', isNullable: false },
+          { name: 'phone', type: 'varchar', isNullable: false },
+          { name: 'address', type: 'varchar', isNullable: false },
+          { name: 'registeredAt', type: 'varchar', isNullable: false },
+        ],
+      }),
+    );
+
+    await queryRunner.createTable(
+      new Table({
+        name: 'order',
+        columns: [
+          {
+            name: 'id',
+            type: 'integer',
+            isPrimary: true,
+            isGenerated: true,
+            generationStrategy: 'increment',
+          },
+          { name: 'customerName', type: 'varchar', isNullable: false },
+          { name: 'address', type: 'varchar', isNullable: false },
+          { name: 'quantity', type: 'integer', isNullable: false },
+          { name: 'amount', type: 'float', isNullable: false },
+          {
+            name: 'status',
+            type: 'varchar',
+            default: `'Pending'`,
+            isNullable: false,
+          },
+          { name: 'date', type: 'varchar', isNullable: false },
+        ],
+      }),
+    );
+
+    await queryRunner.createTable(
+      new Table({
+        name: 'product_suppliers_supplier',
+        columns: [
+          { name: 'productId', type: 'integer', isNullable: false },
+          { name: 'supplierId', type: 'integer', isNullable: false },
+        ],
+        foreignKeys: [
+          new TableForeignKey({
+            columnNames: ['productId'],
+            referencedTableName: 'product',
+            referencedColumnNames: ['id'],
+            onDelete: 'CASCADE',
+            onUpdate: 'CASCADE',
+          }),
+          new TableForeignKey({
+            columnNames: ['supplierId'],
+            referencedTableName: 'supplier',
+            referencedColumnNames: ['id'],
+          }),
+        ],
+      }),
+    );
+
+    await queryRunner.createIndex(
+      'product_suppliers_supplier',
+      new TableIndex({
+        name: 'IDX_product_suppliers_productId',
+        columnNames: ['productId'],
+      }),
+    );
+
+    await queryRunner.createIndex(
+      'product_suppliers_supplier',
+      new TableIndex({
+        name: 'IDX_product_suppliers_supplierId',
+        columnNames: ['supplierId'],
+      }),
+    );
+  }
+
+  async down(queryRunner) {
+    await queryRunner.dropTable('product_suppliers_supplier');
+    await queryRunner.dropTable('order');
+    await queryRunner.dropTable('customer');
+    await queryRunner.dropTable('supplier');
+    await queryRunner.dropTable('product');
+    await queryRunner.dropTable('user');
+  }
+};
