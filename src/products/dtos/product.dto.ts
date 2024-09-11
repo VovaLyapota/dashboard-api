@@ -1,6 +1,6 @@
 import { Expose, Transform } from 'class-transformer';
 import { CategoryEnum } from '../product.entity';
-import { Supplier } from 'src/suppliers/supplier.entity';
+import { Supplier } from '../../suppliers/supplier.entity';
 
 export class ProductDto {
   @Expose()

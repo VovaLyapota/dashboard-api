@@ -1,4 +1,4 @@
-import { Supplier } from 'src/suppliers/supplier.entity';
+import { Supplier } from '../suppliers/supplier.entity';
 import {
   AfterInsert,
   AfterUpdate,
