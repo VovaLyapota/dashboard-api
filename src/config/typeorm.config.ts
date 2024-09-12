@@ -8,8 +8,6 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
 
   createTypeOrmOptions(): Promise<TypeOrmModuleOptions> | TypeOrmModuleOptions {
     const executionType = process.env.NODE_ENV;
-    console.log('EXECUTION TYPE ', executionType);
-    console.log('EXECUTION TYPE FIXED (?)', this.configService.get('NODE_ENV'));
 
     const dbConfig: Partial<TypeOrmModuleOptions> = {
       type: 'sqlite',
