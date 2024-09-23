@@ -75,12 +75,12 @@ describe('Auth System (e2e)', () => {
     });
   });
 
-  describe('login (/signin, GET)', () => {
+  describe('login (/signin, POST)', () => {
     it('should return already existing user', async () => {
       const {
         body: { id, email: resEmail, token },
       } = await request(app.getHttpServer())
-        .get('/users/signin')
+        .post('/users/signin')
         .send({ email, password })
         .expect(200);
 
@@ -91,7 +91,7 @@ describe('Auth System (e2e)', () => {
 
     it('should throw 400 Bad Request if given email or password is invalid', async () => {
       const { body } = await request(app.getHttpServer())
-        .get('/users/signin')
+        .post('/users/signin')
         .send({ email: 'invalid_email', password: 'short' })
         .expect(400);
 
@@ -100,7 +100,7 @@ describe('Auth System (e2e)', () => {
 
     it('should throw 403 Forbidden if given password is invalid', async () => {
       const { body } = await request(app.getHttpServer())
-        .get('/users/signin')
+        .post('/users/signin')
         .send({
           email,
           password: 'invalid_password',

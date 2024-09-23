@@ -32,6 +32,7 @@ export class UsersController {
     return this.authService.signup(body.email, body.password);
   }
 
+  @HttpCode(HttpStatus.OK)
   @Public()
   @Post('signin')
   login(@Body() body: CreateUserDto) {
